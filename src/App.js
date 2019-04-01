@@ -1,28 +1,74 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { Header } from 'Header';
+import { fetchLocationFiveDay, fetchLocationWeather } from 'weather-api';
+import { AppContext, AppInitialState, AppReducer } from 'ContextProvider';
+import { CityWeather } from 'CityWeather';
+import { CityForecast } from 'CityForecast';
+import { AddCityDialog } from 'AddCityDialog';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+export const App = () => {
+  const { state } = useContext(AppContext);
+  const [ { weatherList, locations }, dispatch ] = useReducer(AppReducer, AppInitialState);
+
+  useEffect(() => {
+    fetchWeatherByLocations(locations);
+  }, [ locations ]);
+
+  const [ showAddDialog, setShowAddDialog ] = useState(false);
+  // const { locations } = state;
+
+  const handleCityAdded = (selectedLocation) => {
+    setShowAddDialog(false);
+    dispatch({ type: 'add-location', payload: selectedLocation });
+  };
+
+  const handleCityAddedCancel = () => {
+    setShowAddDialog(false);
+  };
+
+  const handleShowAddCityClick = () => {
+    setShowAddDialog(true);
+  };
+
+  const handleRefresh = () => {
+    fetchWeatherByLocations(locations);
+  };
+
+  const fetchWeatherByLocations = (locations) => {
+    locations.forEach(async location => {
+      await fetchLocationWeather(location)
+        .then(weather => {
+          // console.log('weather', weather);
+          dispatch({ type: 'fetched-weather', payload: weather })
+        });
+      await fetchLocationFiveDay(location)
+        .then(forecast => {
+          console.log('fetched forecast', forecast);
+          dispatch({ type: 'fetched-forecast', payload: { location, ...forecast } })
+        });
+    });
+  };
+
+  return (
+    <AppContext.Provider value={{ dispatch }}>
+      <Header onAddCityClick={handleShowAddCityClick} onRefreshClick={handleRefresh}/>
+      <div className="main">
+        {
+          weatherList ?
+            weatherList.map(weather => {
+              return (
+                <div className="card weather-forecast">
+                  {weather.location ? <CityWeather location={weather.location}/> : null}
+                  {weather.forecast ? <CityForecast forecast={weather.forecast}/> : null}
+                </div>
+              )
+            }) : <div> Clear skies ahead!</div>
+        }
       </div>
-    );
-  }
-}
+
+      <AddCityDialog show={showAddDialog} onCityAdded={handleCityAdded} onCancel={handleCityAddedCancel}/>
+    </AppContext.Provider>
+  );
+};
 
 export default App;
