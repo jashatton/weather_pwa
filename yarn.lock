@@ -784,6 +784,12 @@
     humps "^2.0.1"
     prop-types "^15.5.10"
 
+"@loopmode/cra-workbox-refresh@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@loopmode/cra-workbox-refresh/-/cra-workbox-refresh-0.0.5.tgz#178b3e860dd137a41863166dada5fe02ca410d95"
+  dependencies:
+    fs-extra "^7.0.1"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -3514,7 +3520,7 @@ from2@^2.1.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
-fs-extra@7.0.1, fs-extra@^7.0.0:
+fs-extra@7.0.1, fs-extra@^7.0.0, fs-extra@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-7.0.1.tgz#4f189c44aa123b895f722804f55ea23eadc348e9"
   dependencies:
