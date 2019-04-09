@@ -4,7 +4,7 @@ import moment from 'moment';
 
 export const CityForecast = ({ forecast }) => {
   const daysMap = new Map();
-  const sorted = _.sortBy(forecast.dailies, 'timestamp');
+  const sorted = _.sortBy(forecast, 'timestamp');
 
   sorted
     .forEach(daily => {

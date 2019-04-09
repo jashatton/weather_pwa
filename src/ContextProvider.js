@@ -8,7 +8,6 @@ export const AppInitialState = {
 const AppContext = React.createContext(AppInitialState);
 
 function reduceWeather(state = AppInitialState, action) {
-  // console.log('action', action);
   const toUpdate = state.weatherList.find(weather => weather.locationId === action.payload.locationId);
   const locationWeather = state.weatherList.filter(weather => weather.locationId !== action.payload.locationId);
 
@@ -31,7 +30,7 @@ function reduceForecast(state, action) {
   const updatedWeather = {
     locationId: action.payload.locationId,
     ...toUpdate,
-    forecast: { ...action.payload },
+    forecast: { ...action.payload.forecast },
   };
 
   return {
@@ -50,6 +49,7 @@ function reduceForAddLocation(state, action) {
 export const AppReducer = (state, action) => {
   switch (action.type) {
     case 'fetched-weather':
+      console.log('fetched-weather', action)
       return reduceWeather(state, action);
     case 'fetched-forecast':
       return reduceForecast(state, action);

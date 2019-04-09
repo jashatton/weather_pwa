@@ -1,22 +1,31 @@
 import { initialForecast, initialWeather } from 'mock-weather';
+import { logError } from 'logging';
+import { httpGetByUrl, saveHttpGet } from 'weather-db';
+import axios from 'axios';
 
-export function fetchLocationWeather(key) {
-  if (true) {
+export async function fetchLocationWeather(key) {
+  if (false) {
     return Promise.resolve(initialWeather[ key ])
       .then(response => toWeather(key, response));
   } else {
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?id=${key}&units=imperial&appid=a61fdeae44bdd32e476df3a112e0b717`;
-    return fetch(weatherUrl)
+    return await axios.get(weatherUrl)
       .then(response => {
-        const responseJson = response.json();
-        return toWeather(key, responseJson)
+        saveHttpGet(weatherUrl, response);
+        return toWeather(key, response.data);
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        logError(error);
+        return httpGetByUrl(weatherUrl).then(httpGet => httpGet ? toWeather(key, httpGet) : {
+          locationId: key,
+          location: {}
+        });
+      });
   }
 }
 
-export function fetchLocationFiveDay(key) {
-  if (true) {
+export async function fetchLocationFiveDay(key) {
+  if (false) {
     return Promise.resolve(initialForecast[ key ])
       .then(response => {
         console.log('forecastresponse', response.list);
@@ -28,17 +37,24 @@ export function fetchLocationFiveDay(key) {
   } else {
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?id=${key}&units=imperial&appid=a61fdeae44bdd32e476df3a112e0b717`;
 
-    return fetch(forecastUrl)
+    return await axios.get(forecastUrl)
       .then(response => {
-        const forecastJson = response.json();
-        return (forecastJson.list ? forecastJson.list.map(forecast => toDaily(key, forecast)) : [])
+        saveHttpGet(forecastUrl, response);
+        return (response.data && response.data.list ?
+          { locationId: key, forecast: response.data.list.map(forecast => toDaily(key, forecast)) } :
+          { locationId: key, forecast: [] })
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        logError(error);
+        return httpGetByUrl(forecastUrl)
+          .then(httpGet => (httpGet && httpGet.list ?
+            { locationId: key, forecast: httpGet.list.map(forecast => toDaily(key, forecast)) } :
+            { locationId: key, forecast: [] }));
+      });
   }
 }
 
 function toWeather(key, weatherJson) {
-  // console.log('weatherJson', weatherJson);
   return {
     locationId: key,
     city: weatherJson.name,
@@ -71,7 +87,6 @@ function toWeather(key, weatherJson) {
 }
 
 function toDaily(key, forecastJson) {
-  // console.log('forecast', forecastJson);
   return forecastJson ? ({
     locationId: key,
     timestamp: forecastJson.dt,
@@ -92,45 +107,3 @@ function toDaily(key, forecastJson) {
     }))
   }) : null;
 }
-
-// if ('caches' in window) {
-//   /*
-//    * Check if the service worker has already cached this city's weather
-//    * data. If the service worker has the data, then display the cached
-//    * data while the app fetches the latest data.
-//    */
-//   caches.match(weatherUrl).then(function (response) {
-//     if (response) {
-//       response.json().then(function updateFromCache(json) {
-//         const results = {
-//           key: json.id,
-//           label: json.name,
-//           created: json.dt
-//         };
-//         app.updateWeatherCard(results, json);
-//       });
-//     }
-//   });
-// }
-
-
-// caching five day forecast
-// if ('caches' in window) {
-//   /*
-//    * Check if the service worker has already cached this city's weather
-//    * data. If the service worker has the data, then display the cached
-//    * data while the app fetches the latest data.
-//    */
-//   caches.match(forecastUrl).then(function (response) {
-//     if (response) {
-//       response.json().then(function updateFromCache(json) {
-//         const results = {
-//           key: json.id,
-//           label: json.name,
-//           created: json.dt
-//         };
-//         app.updateForecastCard(results, json);
-//       });
-//     }
-//   });
-// }

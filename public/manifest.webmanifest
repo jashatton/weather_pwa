@@ -1,0 +1,16 @@
+{
+  "name": "YAWA",
+  "short_name": "YAWA",
+  "description": "Just the weather",
+  "icons": [
+    {
+      "src": "umbrella.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/public/index.html",
+  "display": "fullscreen",
+  "theme_color": "#ffffff",
+  "background_color": "#0070ff"
+}

@@ -44,7 +44,7 @@ export const App = () => {
       await fetchLocationFiveDay(location)
         .then(forecast => {
           console.log('fetched forecast', forecast);
-          dispatch({ type: 'fetched-forecast', payload: { location, ...forecast } })
+          dispatch({ type: 'fetched-forecast', payload: forecast })
         });
     });
   };

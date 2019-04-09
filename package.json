@@ -6,6 +6,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
+    "axios": "^0.18.0",
+    "dexie": "^2.0.4",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "react": "^16.8.4",

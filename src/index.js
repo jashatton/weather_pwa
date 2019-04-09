@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import initWorkboxRefresh from '@loopmode/cra-workbox-refresh';
-import { UpdateButton } from 'UpdateButton';
 
 ReactDOM.render(<App/>, document.getElementById('root'));
 
