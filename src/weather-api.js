@@ -1,6 +1,6 @@
 import { initialForecast, initialWeather } from 'mock-weather';
 import { logError } from 'logging';
-import { httpGetByUrl, saveHttpGet } from 'weather-db';
+import { httpGetByUrl, saveHttpGet, addLocation, getSavedUserLocations } from 'weather-db';
 import axios from 'axios';
 
 export async function fetchLocationWeather(key) {
@@ -28,7 +28,6 @@ export async function fetchLocationFiveDay(key) {
   if (false) {
     return Promise.resolve(initialForecast[ key ])
       .then(response => {
-        console.log('forecastresponse', response.list);
         return ({
           locationId: key,
           dailies: response.list ? response.list.map(forecast => toDaily(key, forecast)) : [],
@@ -52,6 +51,14 @@ export async function fetchLocationFiveDay(key) {
             { locationId: key, forecast: [] }));
       });
   }
+}
+
+export async function saveLocation(locationKey) {
+  return addLocation(locationKey);
+}
+
+export async function getUserLocations() {
+  return await getSavedUserLocations();
 }
 
 function toWeather(key, weatherJson) {

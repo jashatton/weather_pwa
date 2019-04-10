@@ -9,13 +9,11 @@ export const CityForecast = ({ forecast }) => {
   sorted
     .forEach(daily => {
       const day = new moment.unix(daily.timestamp);
-      console.log('day of week', day.day(), day.format());
       daysMap.set(day.day(), daily);
     });
 
   const setOfDays = Array.from(daysMap, ([key, value]) => value);
 
-  console.log('set', setOfDays);
   return (
     <div className="future">
       {

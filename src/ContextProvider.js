@@ -2,7 +2,7 @@ import React from 'react';
 
 export const AppInitialState = {
   weatherList: [],
-  locations: []
+  selectedLocations: []
 };
 
 const AppContext = React.createContext(AppInitialState);
@@ -42,19 +42,27 @@ function reduceForecast(state, action) {
 function reduceForAddLocation(state, action) {
   return {
     ...state,
-    locations: [...state.locations, action.payload]
+    selectedLocations: [ ...state.selectedLocations, action.payload ]
+  }
+}
+
+function reduceFetchedUserLocations(state, action) {
+  return {
+    ...state,
+    selectedLocations: action.payload
   }
 }
 
 export const AppReducer = (state, action) => {
   switch (action.type) {
     case 'fetched-weather':
-      console.log('fetched-weather', action)
       return reduceWeather(state, action);
     case 'fetched-forecast':
       return reduceForecast(state, action);
     case 'add-location':
       return reduceForAddLocation(state, action);
+    case 'fetched-user-locations':
+      return reduceFetchedUserLocations(state, action);
     default:
       return state;
   }

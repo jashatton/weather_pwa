@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { Header } from 'Header';
-import { fetchLocationFiveDay, fetchLocationWeather } from 'weather-api';
+import { fetchLocationFiveDay, fetchLocationWeather, getUserLocations, saveLocation } from 'weather-api';
 import { AppContext, AppInitialState, AppReducer } from 'ContextProvider';
 import { CityWeather } from 'CityWeather';
 import { CityForecast } from 'CityForecast';
@@ -8,18 +8,26 @@ import { AddCityDialog } from 'AddCityDialog';
 
 export const App = () => {
   const { state } = useContext(AppContext);
-  const [ { weatherList, locations }, dispatch ] = useReducer(AppReducer, AppInitialState);
+  const [ { weatherList, selectedLocations }, dispatch ] = useReducer(AppReducer, AppInitialState);
 
   useEffect(() => {
-    fetchWeatherByLocations(locations);
-  }, [ locations ]);
+    getUserLocations()
+      .then(locations => {
+        dispatch({ type: 'fetched-user-locations', payload: locations });
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchWeatherByLocations(selectedLocations);
+  }, [ selectedLocations ]);
 
   const [ showAddDialog, setShowAddDialog ] = useState(false);
-  // const { locations } = state;
 
   const handleCityAdded = (selectedLocation) => {
     setShowAddDialog(false);
-    dispatch({ type: 'add-location', payload: selectedLocation });
+    saveLocation(selectedLocation);
+
+    dispatch({ type: 'add-location', payload: { locationKey: selectedLocation } });
   };
 
   const handleCityAddedCancel = () => {
@@ -31,19 +39,17 @@ export const App = () => {
   };
 
   const handleRefresh = () => {
-    fetchWeatherByLocations(locations);
+    fetchWeatherByLocations(selectedLocations);
   };
 
   const fetchWeatherByLocations = (locations) => {
     locations.forEach(async location => {
-      await fetchLocationWeather(location)
+      await fetchLocationWeather(location.locationKey)
         .then(weather => {
-          // console.log('weather', weather);
           dispatch({ type: 'fetched-weather', payload: weather })
         });
-      await fetchLocationFiveDay(location)
+      await fetchLocationFiveDay(location.locationKey)
         .then(forecast => {
-          console.log('fetched forecast', forecast);
           dispatch({ type: 'fetched-forecast', payload: forecast })
         });
     });

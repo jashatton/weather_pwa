@@ -23,7 +23,7 @@ export const AddCityDialog = ({ show, onCityAdded, onCancel }) => {
       <div className="dialog">
         <div className="dialog-title">Add new city</div>
         <div className="dialog-body">
-          <select id="selectCityToAdd" defaultValue={DEFAULT_LOCATION} onChange={handleOnCitySelect}>
+          <select id="selectCityToAdd" defaultValue={DEFAULT_LOCATION.locationKey} onChange={handleOnCitySelect}>
             <option value="4671654">Austin, TX</option>
             <option value="4930956">Boston, MA</option>
             <option value="4887398">Chicago, IL</option>

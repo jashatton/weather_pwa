@@ -4,7 +4,6 @@ import { formatDate } from 'dates';
 import moment from 'moment';
 
 export const CityWeather = ({ location }) => {
-  console.log('location', location);
   return (
     <React.Fragment>
       <div className="locaton">City: {location.city}, {location.country}</div>
