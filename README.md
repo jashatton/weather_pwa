@@ -1,6 +1,20 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Weather PWA
 
-## Available Scripts
+
+This project is a PWA based on Google's ["Your First Progressive Web App" tutorial](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/), re-written in React.
+
+This is a Create React App project so most everything you can do with this type of project can be done with this one. 
+
+
+## The differences
+
+With PWAs you have to build the application and deploy it to a webserver in order for the Service Worker to do anything. 
+
+You can build with `yarn build` and then use something like [http-server](https://www.npmjs.com/package/http-server) to run the build.
+
+
+## CRA Related README stuff
+
 
 In the project directory, you can run:
 
